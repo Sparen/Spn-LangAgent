@@ -8,6 +8,16 @@ import com.google.gson.Gson;
 public class RequestLog {
 
     /**
+     * Static Request ID generator.
+     */
+    static Integer baseRequestID = 0;
+
+    /**
+     * Request ID of this request.
+     */
+    private Integer requestID;
+
+    /**
      * Request URL for this request.
      */
     private String requestURL;
@@ -31,6 +41,7 @@ public class RequestLog {
      * Default constructor for the RequestLog class.
      */
     public RequestLog() {
+        this.requestID = baseRequestID++;
         this.requestURL = "";
         this.requestTime = 0.0;
         this.stringsCreated = 0;
@@ -45,10 +56,19 @@ public class RequestLog {
      * @param memoryAllocated the amount of allocated memory for this request log.
      */
     public RequestLog(String requestURL, double requestTime, int stringsCreated, int memoryAllocated) {
+        this.requestID = baseRequestID++;
         this.requestURL = requestURL;
         this.requestTime = requestTime;
         this.stringsCreated = stringsCreated;
         this.memoryAllocated = memoryAllocated;
+    }
+
+    /**
+     * Gets the request ID for this request log.
+     * @return request id for this request log.
+     */
+    public Integer getRequestID() {
+        return this.requestID;
     }
 
     /**
@@ -122,6 +142,29 @@ public class RequestLog {
     public String toJSON() {
         Gson gson = new Gson();
         return gson.toJson(this);
+    }
+
+    @Override
+    public String toString() {
+        return this.requestID.toString().concat(": ").concat(this.requestURL);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if ((o == null) || (o.getClass() != this.getClass())) {
+            return false;
+        }
+        //Equality testing on fields
+        RequestLog obj = (RequestLog) o;
+        return this.requestID.equals(obj.requestID) && this.requestURL.equals(obj.requestURL); //.equals on important fields
+    }
+
+    @Override
+    public int hashCode() {
+        return 11 * this.requestID.hashCode() * this.requestURL.hashCode();
     }
 
 }
