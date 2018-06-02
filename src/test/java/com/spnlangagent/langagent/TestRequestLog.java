@@ -71,4 +71,12 @@ public class TestRequestLog {
         assertNotEquals(l2, null);
         assertNotEquals(l1, l2);
     }
+
+    @Test
+    public void testToString() {
+        RequestLog l1 = new RequestLog("/api/test", 4.0, 20, 400);
+        Integer l1ID = l1.getRequestID();
+        assertEquals("" + l1ID + ": /api/test", l1.toString());
+    }
+    
 }
