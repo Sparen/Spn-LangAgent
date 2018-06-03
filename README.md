@@ -20,7 +20,7 @@ Test suites consist of all java files prefixed with 'Test' located in src/test/j
 Run the tests with:
 
 ```
-mvn -Dtest=Test* test
+mvn -DfailIfNoTests=false -Dtest=Test* test
 ```
 
 Alternatively, running `mvn package` will run the tests as well. TravisCI has been setup with our application (see the badge at the top of the README).
@@ -44,5 +44,5 @@ Removes all build files and emacs temporary files
 ```
 make javadoc
 ```
-Creates documentation based off of Javadoc
+Creates documentation for runtime (not the agent) based off of Javadoc
 

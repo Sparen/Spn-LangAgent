@@ -4,4 +4,4 @@ clean:
 
 javadoc:
 	rm -rf docs/*
-	javadoc -d ./docs ./src/main/java/com/spnlangagent/langagent/*
+	javadoc -d ./docs ./runtime/src/main/java/com/spnlangagent/langagent/*
