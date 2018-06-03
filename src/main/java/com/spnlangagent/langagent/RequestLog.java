@@ -4,13 +4,14 @@ import com.google.gson.Gson;
 
 /**
  * Request Log object that stores a request URL and various metrics for the specific request.
+ * Similar to insight's request/RequestAggregator.
  */
 public class RequestLog {
 
     /**
      * Static Request ID generator.
      */
-    static Integer baseRequestID = 0;
+    private static Integer baseRequestID = 0;
 
     /**
      * Request ID of this request.
@@ -25,17 +26,17 @@ public class RequestLog {
     /**
      * Request Time for this request (ms).
      */
-    private double requestTime;
+    private long requestTime;
 
     /**
      * Number of strings created for this request.
      */
-    private int stringsCreated;
+    private long stringsCreated;
 
     /**
      * Amount of memory allocated for this request.
      */
-    private int memoryAllocated;
+    private long memoryAllocated;
 
     /**
      * Default constructor for the RequestLog class.
@@ -43,7 +44,7 @@ public class RequestLog {
     public RequestLog() {
         this.requestID = baseRequestID++;
         this.requestURL = "";
-        this.requestTime = 0.0;
+        this.requestTime = 0;
         this.stringsCreated = 0;
         this.memoryAllocated = 0;
     }
@@ -55,7 +56,7 @@ public class RequestLog {
      * @param stringsCreated the number of strings created for this request log.
      * @param memoryAllocated the amount of allocated memory for this request log.
      */
-    public RequestLog(String requestURL, double requestTime, int stringsCreated, int memoryAllocated) {
+    public RequestLog(String requestURL, long requestTime, int stringsCreated, int memoryAllocated) {
         this.requestID = baseRequestID++;
         this.requestURL = requestURL;
         this.requestTime = requestTime;
@@ -83,7 +84,7 @@ public class RequestLog {
      * Gets the request time for this request log.
      * @return request time for this request log.
      */
-    public double getRequestTime() {
+    public long getRequestTime() {
         return this.requestTime;
     }
 
@@ -91,7 +92,7 @@ public class RequestLog {
      * Gets the number of strings created for this request log.
      * @return number of strings created for this request log.
      */
-    public int getStringsCreated() {
+    public long getStringsCreated() {
         return this.stringsCreated;
     }
 
@@ -99,7 +100,7 @@ public class RequestLog {
      * Gets the amount of memory allocated for this request log.
      * @return amount of memory allocated for this request log.
      */
-    public int getMemoryAllocated() {
+    public long getMemoryAllocated() {
         return this.memoryAllocated;
     }
 
@@ -115,7 +116,7 @@ public class RequestLog {
      * Sets the request time from this request log.
      * @param requestTime the request time for this request log.
      */
-    public void setRequestTime(double requestTime) {
+    public void setRequestTime(long requestTime) {
         this.requestTime = requestTime;
     }
 
@@ -123,7 +124,7 @@ public class RequestLog {
      * Sets the number of strings created for this request log.
      * @param stringsCreated the number of strings created for this request log.
      */
-    public void setStringsCreated(int stringsCreated) {
+    public void setStringsCreated(long stringsCreated) {
         this.stringsCreated = stringsCreated;
     }
 
@@ -131,8 +132,24 @@ public class RequestLog {
      * Sets the amount of memory allocated for this request log.
      * @param memoryAllocated the amount of memory allocated for this request log.
      */
-    public void setMemoryAllocated(int memoryAllocated) {
+    public void setMemoryAllocated(long memoryAllocated) {
         this.memoryAllocated = memoryAllocated;
+    }
+
+    /**
+     * Adds to the number of strings created for this request log.
+     * @param newstrings the number of strings to be added to this request log.
+     */
+    public void addStringsCreated(long newstrings) {
+        this.stringsCreated += newstrings;
+    }
+
+    /**
+     * Adds to the amount of memory allocated for this request log.
+     * @param newmemory the amount of memory to be added to this request log.
+     */
+    public void addMemoryAllocated(long newmemory) {
+        this.memoryAllocated += newmemory;
     }
 
     /**
