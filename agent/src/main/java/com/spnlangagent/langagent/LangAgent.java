@@ -67,8 +67,15 @@ public class LangAgent {
 
     }
 
+    //Extract our runtime from the jar, and then run it.
+    //Code adapted from InsightAgent.java
     private static void startRuntime(String agentArgs) throws Exception {
+        //Extract
         //TODO
+
+        //Run
+        Class<?> runtimeClass = ClassLoader.getSystemClassLoader().loadClass("com.spnlangagent.langagent.LangagentApplication");
+        runtimeClass.getDeclaredMethod("bootstrap", String.class).invoke(null, agentArgs);
     }
 
 }
