@@ -80,10 +80,14 @@ public class LangAgent {
     private static void startRuntime(String agentArgs) throws Exception {
         System.out.println("startRuntime: now running with agentArgs: " + agentArgs);
         //Create a temporary file for the jar
-        File output = File.createTempFile("insight-runtime", "jar");
+        File output = File.createTempFile("Spn-LangAgent-Runtime-0.0", "jar");
         //Attempt to load the runtime jar
         try (InputStream inputStream = ClassLoader.getSystemClassLoader().getResource("target/Spn-LangAgent-Runtime-0.0.jar").openStream()) {
             Files.copy(inputStream, output.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch(NullPointerException npe) {
+            System.out.println("Null Pointer Exception when trying to get runtime agent jar. Since it was not found, aborting.");
+            npe.printStackTrace();
+            System.exit(1);
         }
 
         System.out.println("startRuntime: now creating runtime class loader");
