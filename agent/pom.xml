@@ -10,9 +10,9 @@
 	</parent>
     <packaging>jar</packaging>
 
-	<name>Spn-LangAgent-RuntimeAgent</name>
-    <description>Sparen Language Agent Runtime Agent</description>
-    <artifactId>Spn-LangAgent-RuntimeAgent</artifactId>
+	<name>Spn-LangAgent-Agent</name>
+    <description>Sparen Language Agent Agent</description>
+    <artifactId>Spn-LangAgent-Agent</artifactId>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
