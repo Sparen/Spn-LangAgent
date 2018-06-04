@@ -1,7 +1,8 @@
 package com.spnlangagent.langagent;
 
 import java.io.File;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.io.InputStream;
@@ -70,8 +71,12 @@ public class LangAgent {
     //Extract our runtime from the jar, and then run it.
     //Code adapted from InsightAgent.java
     private static void startRuntime(String agentArgs) throws Exception {
-        //Extract
-        //TODO
+        //Create a temporary file for the jar
+        File output = File.createTempFile("insight-runtime", "jar");
+        //Attempt to load the runtime jar
+        try (InputStream inputStream = ClassLoader.getSystemClassLoader().getResource("target/Spn-LangAgent-Runtime-0.0.jar").openStream()) {
+            Files.copy(inputStream, output.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        }
 
         //Run
         Class<?> runtimeClass = ClassLoader.getSystemClassLoader().loadClass("com.spnlangagent.langagent.LangagentApplication");
