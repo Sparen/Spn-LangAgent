@@ -28,6 +28,7 @@ public class LangAgent {
      * @throws Exception if something goes wrong.
      */
     public static void premain(String agentArgs, Instrumentation inst) throws Exception {
+        System.out.println("LangAgent: premain now running");
         //First, set up our instrumentation
         setupInstrumentation(agentArgs, inst);
 
@@ -36,6 +37,7 @@ public class LangAgent {
     }
 
     private static void setupInstrumentation(String agentArgs, Instrumentation inst) throws Exception {
+        System.out.println("setupInstrumentation: now running with agentArgs: " + agentArgs);
         //Add Transformers to the Instrumentation
         inst.addTransformer(new SLAInstrumenter(), true);
 
@@ -50,6 +52,7 @@ public class LangAgent {
             // NOP
         }
 
+        System.out.println("setupInstrumentation: now getting loaded classes");
         // Get the set of already loaded classes that can be rewritten.
         Class<?>[] classes = inst.getAllLoadedClasses();
         ArrayList<Class<?>> classList = new ArrayList<Class<?>>();
@@ -59,6 +62,7 @@ public class LangAgent {
             }
         }
 
+        System.out.println("setupInstrumentation: now reloading classes");
         // Reload classes, if possible.
         Class<?>[] workaround = new Class<?>[classList.size()];
         try {
@@ -74,6 +78,7 @@ public class LangAgent {
     //Extract our runtime from the jar, and then run it.
     //Code adapted from InsightAgent.java
     private static void startRuntime(String agentArgs) throws Exception {
+        System.out.println("startRuntime: now running with agentArgs: " + agentArgs);
         //Create a temporary file for the jar
         File output = File.createTempFile("insight-runtime", "jar");
         //Attempt to load the runtime jar
@@ -81,18 +86,21 @@ public class LangAgent {
             Files.copy(inputStream, output.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
 
+        System.out.println("startRuntime: now creating runtime class loader");
         //Handle classloaders. Directly copied from Insight version.
         //Note: The system class loader takes care of loading all the application level classes into the JVM.
         ClassLoader extClassLoader = ClassLoader.getSystemClassLoader().getParent(); //obtain the native bootstrap class loader
         URL[] runtimejarurl = {output.toURI().toURL()};
         ClassLoader runtimeClassLoader = new URLClassLoader(runtimejarurl, null);
 
+        System.out.println("startRuntime: now replacing class loader parent field");
         //Replaces the native bootstrap class loader with ours
         Field f = ClassLoader.class.getDeclaredField("parent");
         f.setAccessible(true);
         f.set(extClassLoader, runtimeClassLoader);
         f.setAccessible(false);
 
+        System.out.println("startRuntime: now running Langagent Application main");
         //Have the system class loader load our runtime agent class.
         Class<?> runtimeClass = ClassLoader.getSystemClassLoader().loadClass("com.spnlangagent.langagent.LangagentApplication");
         //Run the main method of the runtime agent
