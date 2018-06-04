@@ -10,12 +10,15 @@ This project was made using Spring Boot via the Initializr, and was tested on We
 
 ### Usage
 
-
 ### Build Commands
 
 This project uses Maven and Java 1.8. If running locally, the application will launch on localhost:8081
 
-Test suites consist of all java files prefixed with 'Test' located in src/test/java/com/spnlangagent/
+This project consists of a main parent pom.xml, as there are two seperate components in this project - the agent and the runtime. Each of these has its own pom.xml and builds to a seperate .jar.
+
+Use `mvn package` from the parent directory (the one with this README) to build the .jar
+
+Test suites consist of all java files prefixed with 'Test' located in runtime/src/test/java/com/spnlangagent/
 
 Run the tests with:
 
