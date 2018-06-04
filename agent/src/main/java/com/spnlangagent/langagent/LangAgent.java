@@ -93,9 +93,10 @@ public class LangAgent {
         f.set(extClassLoader, runtimeClassLoader);
         f.setAccessible(false);
 
-        //Have the system class loader load our runtime agent class and run the bootstrap method.
+        //Have the system class loader load our runtime agent class.
         Class<?> runtimeClass = ClassLoader.getSystemClassLoader().loadClass("com.spnlangagent.langagent.LangagentApplication");
-        runtimeClass.getDeclaredMethod("bootstrap", String.class).invoke(null, agentArgs);
+        //Run the main method of the runtime agent
+        runtimeClass.getDeclaredMethod("main", String.class).invoke(null, agentArgs);
     }
 
 }
