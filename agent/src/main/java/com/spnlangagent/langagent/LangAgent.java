@@ -6,6 +6,9 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.lang.reflect.Field;
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
 
@@ -22,7 +25,7 @@ public class LangAgent {
      * Agent premain that runs first.
      * @param agentArgs javaagent arguments that are provided when the agent is run.
      * @param inst Instrumentation instance.
-     * @throws Exception
+     * @throws Exception if something goes wrong.
      */
     public static void premain(String agentArgs, Instrumentation inst) throws Exception {
         //First, set up our instrumentation
@@ -78,7 +81,19 @@ public class LangAgent {
             Files.copy(inputStream, output.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
 
-        //Run
+        //Handle classloaders. Directly copied from Insight version.
+        //Note: The system class loader takes care of loading all the application level classes into the JVM.
+        ClassLoader extClassLoader = ClassLoader.getSystemClassLoader().getParent(); //obtain the native bootstrap class loader
+        URL[] runtimejarurl = {output.toURI().toURL()};
+        ClassLoader runtimeClassLoader = new URLClassLoader(runtimejarurl, null);
+
+        //Replaces the native bootstrap class loader with ours
+        Field f = ClassLoader.class.getDeclaredField("parent");
+        f.setAccessible(true);
+        f.set(extClassLoader, runtimeClassLoader);
+        f.setAccessible(false);
+
+        //Have the system class loader load our runtime agent class and run the bootstrap method.
         Class<?> runtimeClass = ClassLoader.getSystemClassLoader().loadClass("com.spnlangagent.langagent.LangagentApplication");
         runtimeClass.getDeclaredMethod("bootstrap", String.class).invoke(null, agentArgs);
     }
