@@ -79,7 +79,8 @@ public class LangAgent {
     //Code adapted from InsightAgent.java
     private static void startRuntime(String agentArgs) throws Exception {
         System.out.println("startRuntime: now running with agentArgs: " + agentArgs);
-        LangagentApplication.class.getDeclaredMethod("main", String.class).invoke(null, agentArgs);
+        LangagentApplication.main(null);
+
         /*
         //Create a temporary file for the jar
         File output = File.createTempFile("Spn-LangAgent-Runtime-0.0", "jar");
