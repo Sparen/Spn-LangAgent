@@ -79,8 +79,32 @@ public class LangAgent {
     //Code adapted from InsightAgent.java
     private static void startRuntime(String agentArgs) throws Exception {
         System.out.println("startRuntime: now running with agentArgs: " + agentArgs);
+        LangagentApplication.class.getDeclaredMethod("main", String.class).invoke(null, agentArgs);
+        /*
         //Create a temporary file for the jar
         File output = File.createTempFile("Spn-LangAgent-Runtime-0.0", "jar");
+
+        //DEBUG AREA
+        URL test1 = ClassLoader.getSystemClassLoader().getResource("target/Spn-LangAgent-Runtime-0.0.jar");
+        URL test2 = ClassLoader.getSystemClassLoader().getResource("Spn-LangAgent-Runtime-0.0.jar");
+        URL test3 = ClassLoader.getSystemClassLoader().getResource("libs/Spn-LangAgent-Runtime-0.0.jar");
+        URL test4 = ClassLoader.getSystemClassLoader().getResource("target/Spn-LangAgent-Agent-0.0.jar");
+        URL test5 = ClassLoader.getSystemClassLoader().getResource("Spn-LangAgent-Agent-0.0.jar");
+        URL test6 = ClassLoader.getSystemClassLoader().getResource("runtime/target/Spn-LangAgent-Runtime-0.0.jar");
+        URL test7 = ClassLoader.getSystemClassLoader().getResource("agent/target/Spn-LangAgent-Agent-0.0.jar");
+        if (test1 == null) {System.out.println("test 1 failed");}
+        if (test2 == null) {System.out.println("test 2 failed");}
+        if (test3 == null) {System.out.println("test 3 failed");}
+        if (test4 == null) {System.out.println("test 4 failed");}
+        if (test5 == null) {System.out.println("test 5 failed");}
+        if (test6 == null) {System.out.println("test 6 failed");}
+        if (test7 == null) {System.out.println("test 7 failed");}
+        System.out.println("Classpath: " +  System.getProperty("java.class.path", "."));
+        for (URL u : ((URLClassLoader) ClassLoader.getSystemClassLoader()).getURLs()) {
+            System.out.println(u.getFile());
+        }
+
+
         //Attempt to load the runtime jar
         try (InputStream inputStream = ClassLoader.getSystemClassLoader().getResource("target/Spn-LangAgent-Runtime-0.0.jar").openStream()) {
             Files.copy(inputStream, output.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -91,7 +115,7 @@ public class LangAgent {
         }
 
         System.out.println("startRuntime: now creating runtime class loader");
-        //Handle classloaders. Directly copied from Insight version.
+        //Handle classloaders. Directly copied from Insight version, which in turn may have been based on https://stackoverflow.com/questions/60764
         //Note: The system class loader takes care of loading all the application level classes into the JVM.
         ClassLoader extClassLoader = ClassLoader.getSystemClassLoader().getParent(); //obtain the native bootstrap class loader
         URL[] runtimejarurl = {output.toURI().toURL()};
@@ -109,6 +133,7 @@ public class LangAgent {
         Class<?> runtimeClass = ClassLoader.getSystemClassLoader().loadClass("com.spnlangagent.langagent.LangagentApplication");
         //Run the main method of the runtime agent
         runtimeClass.getDeclaredMethod("main", String.class).invoke(null, agentArgs);
+        */
     }
 
 }

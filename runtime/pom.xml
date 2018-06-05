@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-       <groupId>com.spnlangagent</groupId>
+       <groupId>com.spnlangagent.langagent</groupId>
        <artifactId>Spn-LangAgent</artifactId>
        <version>0.0</version>
     </parent>
