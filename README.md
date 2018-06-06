@@ -49,3 +49,6 @@ make javadoc
 ```
 Creates documentation for runtime (not the agent) based off of Javadoc
 
+### Random Things I Learned
+
+* MANIFEST.MF files require a new line (\n) at the end or Maven freaks out and ignores your Manifest entirely  
