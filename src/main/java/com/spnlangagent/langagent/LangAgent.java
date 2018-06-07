@@ -1,18 +1,9 @@
 package com.spnlangagent.langagent;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.lang.reflect.Field;
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
-
-import com.google.monitoring.runtime.instrumentation.AllocationRecorder;
 
 /**
  * Language Agent that is run on startup. Handles instrumentation, injection into the runtime classloader, etc.
@@ -25,9 +16,8 @@ public class LangAgent {
      * Agent premain that runs first.
      * @param agentArgs javaagent arguments that are provided when the agent is run.
      * @param inst Instrumentation instance.
-     * @throws Exception if something goes wrong.
      */
-    public static void premain(String agentArgs, Instrumentation inst) throws Exception {
+    public static void premain(String agentArgs, Instrumentation inst) {
         System.out.println("LangAgent: premain now running");
         //First, set up our instrumentation
         setupInstrumentation(agentArgs, inst);
@@ -36,7 +26,7 @@ public class LangAgent {
         startRuntime(agentArgs);
     }
 
-    private static void setupInstrumentation(String agentArgs, Instrumentation inst) throws Exception {
+    private static void setupInstrumentation(String agentArgs, Instrumentation inst) {
         System.out.println("setupInstrumentation: now running with agentArgs: " + agentArgs);
         //Add Transformers to the Instrumentation
         inst.addTransformer(new SLAInstrumenter(), true);
@@ -75,11 +65,13 @@ public class LangAgent {
 
     }
 
-    //Extract our runtime from the jar, and then run it.
-    //Code adapted from InsightAgent.java
-    private static void startRuntime(String agentArgs) throws Exception {
+    /**
+     * Begins the runtime.
+     * @param agentArgs javaagent arguments that are provided when the agent is run.
+     */
+    private static void startRuntime(String agentArgs) {
         System.out.println("startRuntime: now running with agentArgs: " + agentArgs);
-        
+        SLARuntime runtime = new SLARuntime();
     }
 
 }
