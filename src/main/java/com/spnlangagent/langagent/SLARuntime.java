@@ -21,7 +21,7 @@ public class SLARuntime {
      */
     public SLARuntime() {
         //First, setup Allocation Recorder
-        setupAllicationRecorder();
+        setupAllocationRecorder();
 
         //Next, setup storing the RequestLogs
 
@@ -30,9 +30,9 @@ public class SLARuntime {
     }
 
     /**
-     * Sets up Allication Recorder and any events that need to be handled during runtime.
+     * Sets up Allocation Recorder and any events that need to be handled during runtime.
      */
-    private static void setupAllicationRecorder() {
+    private static void setupAllocationRecorder() {
 
     }
 
