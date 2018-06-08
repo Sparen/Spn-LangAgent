@@ -24,9 +24,14 @@ public class RequestLog {
     private String requestURL;
 
     /**
-     * Request Time for this request (ms).
+     * Start Time for this request (ms).
      */
-    private long requestTime;
+    private long startTime;
+
+    /**
+     * End Time for this request (ms).
+     */
+    private long endTime;
 
     /**
      * Number of strings created for this request.
@@ -44,7 +49,8 @@ public class RequestLog {
     public RequestLog() {
         this.requestID = baseRequestID++;
         this.requestURL = "";
-        this.requestTime = 0;
+        this.startTime = -1;
+        this.endTime = -1;
         this.stringsCreated = 0;
         this.memoryAllocated = 0;
     }
@@ -52,14 +58,15 @@ public class RequestLog {
     /**
      * Standard constructor for the RequestLog class.
      * @param requestURL the request URL for this request log.
-     * @param requestTime the request time for this request log.
+     * @param startTime the start time for this request log.
      * @param stringsCreated the number of strings created for this request log.
      * @param memoryAllocated the amount of allocated memory for this request log.
      */
-    public RequestLog(String requestURL, long requestTime, int stringsCreated, int memoryAllocated) {
+    public RequestLog(String requestURL, long startTime, int stringsCreated, int memoryAllocated) {
         this.requestID = baseRequestID++;
         this.requestURL = requestURL;
-        this.requestTime = requestTime;
+        this.startTime = startTime;
+        this.endTime = -1;
         this.stringsCreated = stringsCreated;
         this.memoryAllocated = memoryAllocated;
     }
@@ -81,11 +88,27 @@ public class RequestLog {
     }
 
     /**
-     * Gets the request time for this request log.
-     * @return request time for this request log.
+     * Gets the start time for this request log.
+     * @return start time for this request log.
      */
-    public long getRequestTime() {
-        return this.requestTime;
+    public long getStartTime() {
+        return this.startTime;
+    }
+
+    /**
+     * Gets the end time for this request log.
+     * @return end time for this request log.
+     */
+    public long getEndTime() {
+        return this.endTime;
+    }
+
+    /**
+     * Gets the elapsed time for this request log.
+     * @return elapsed time for this request log.
+     */
+    public long getElapsedTime() {
+        return this.endTime - this.startTime;
     }
 
     /**
@@ -113,11 +136,19 @@ public class RequestLog {
     }
 
     /**
-     * Sets the request time from this request log.
-     * @param requestTime the request time for this request log.
+     * Sets the start time from this request log.
+     * @param startTime the request time for this request log.
      */
-    public void setRequestTime(long requestTime) {
-        this.requestTime = requestTime;
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    /**
+     * Sets the end time from this request log.
+     * @param endTime the end time for this request log.
+     */
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
     }
 
     /**

@@ -51,7 +51,7 @@ public class LangAgent {
         }
 
         //'Hack' based on code from insight: set the static 'instrumentation' field of the AllocationRecorder here since
-        //we can't run AllocationRecorder.setInstrumentation(inst); the same way Google does in their agent.
+        //we can't run AllocationRecorder.setInstrumentation(inst); the same way Google does in their agent because it is protected.
         Field field = AllocationRecorder.class.getDeclaredField("instrumentation");
         field.setAccessible(true);
         field.set(null, inst);
