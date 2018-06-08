@@ -2,6 +2,9 @@ package com.spnlangagent.langagent;
 
 import com.google.monitoring.runtime.instrumentation.AllocationInstrumenter;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
@@ -12,16 +15,26 @@ import java.security.ProtectionDomain;
  */
 public class SLAInstrumenter implements ClassFileTransformer {
 
+    /**
+     * Logger for the SLA Instrumenter.
+     */
+    public static Logger logger = LogManager.getLogger(SLAInstrumenter.class);
+
     @Override
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[]
             classfileBuffer) throws IllegalClassFormatException {
-
+        System.out.println("SLAInstrumenter transform: now running");
         //If not rewritable, then return the buffer as-is, without any transformation
         if (!canRewriteClass(className, loader)) {
+            System.out.println("DEBUG: SLAInstrumenter transform: Cannot rewrite class " + className + "; returning classfileBuffer");
             return classfileBuffer;
+            //Google's code returns null instead
+
         }
 
         //Otherwise, if rewritable, instrument the bytecode with the provided loader
+        //Internally, runs AllocationRecorder.recordAllocation.
+        System.out.println("DEBUG: SLAInstrumenter transform: Able to rewrite class " + className + "; now instrumenting");
         return AllocationInstrumenter.instrument(classfileBuffer, loader);
     }
 

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.io.IOException;
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
+import java.lang.reflect.Field;
+
+import com.google.monitoring.runtime.instrumentation.AllocationRecorder;
 
 /**
  * Language Agent that is run on startup. Handles instrumentation, injection into the runtime classloader, etc.
@@ -17,7 +20,7 @@ public class LangAgent {
      * @param agentArgs javaagent arguments that are provided when the agent is run.
      * @param inst Instrumentation instance.
      */
-    public static void premain(String agentArgs, Instrumentation inst) {
+    public static void premain(String agentArgs, Instrumentation inst) throws Exception {
         System.out.println("LangAgent: premain now running");
         //First, set up our instrumentation
         setupInstrumentation(agentArgs, inst);
@@ -26,12 +29,17 @@ public class LangAgent {
         startRuntime(agentArgs);
     }
 
-    private static void setupInstrumentation(String agentArgs, Instrumentation inst) {
+    /**
+     * Method based on Google AllocationInstrumenter.bootstrap that sets up our Instrumentation.
+     * @param agentArgs javaagent arguments that are provided when the agent is run.
+     * @param inst Instrumentation instance.
+     */
+    private static void setupInstrumentation(String agentArgs, Instrumentation inst) throws Exception {
         System.out.println("setupInstrumentation: now running with agentArgs: " + agentArgs);
         //Add Transformers to the Instrumentation
         inst.addTransformer(new SLAInstrumenter(), true);
 
-        /* START Code adpated from Google's Allocation Instrumenter */
+        /* START Code adapted from Google's Allocation Instrumenter */
         // Load classes needed to perform instrumentation in advance to avoid ClassCircularityError later
         try {
             Class.forName("sun.security.provider.PolicyFile");
@@ -41,6 +49,13 @@ public class LangAgent {
         } catch (Throwable t) {
             // NOP
         }
+
+        //'Hack' based on code from insight: set the static 'instrumentation' field of the AllocationRecorder here since
+        //we can't run AllocationRecorder.setInstrumentation(inst); the same way Google does in their agent.
+        Field field = AllocationRecorder.class.getDeclaredField("instrumentation");
+        field.setAccessible(true);
+        field.set(null, inst);
+        field.setAccessible(false);
 
         System.out.println("setupInstrumentation: now getting loaded classes");
         // Get the set of already loaded classes that can be rewritten.

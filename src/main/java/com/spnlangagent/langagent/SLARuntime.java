@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-import com.google.monitoring.runtime.instrumentation.AllocationRecorder;
 
 /**
  * Class that handles interfacing with Google's Allocation Recorder and handles logging.
